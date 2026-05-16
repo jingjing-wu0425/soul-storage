@@ -48,9 +48,9 @@ function Tag({ children }: { children: string }) {
 }
 
 // ─── Entry Card ───
-function EntryCard({ entry, idx, onUpdate, onDelete }: { entry: Entry; idx: number; onUpdate: (e: Entry) => Promise<void>; onDelete: () => Promise<void> }) {
+function EntryCard({ entry, idx, startInEdit, onUpdate, onDelete }: { entry: Entry; idx: number; startInEdit?: boolean; onUpdate: (e: Entry) => Promise<void>; onDelete: () => Promise<void> }) {
   const [open, setOpen] = useState(false);
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(!!startInEdit);
   const [draft, setDraft] = useState<Entry>(entry);
 
   const startEdit = () => { setDraft({ ...entry }); setEditing(true); };
@@ -149,6 +149,7 @@ export default function ResumePage() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [newEntryId, setNewEntryId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/experience').then(r => r.json()).then((data: Entry[]) => {
@@ -179,7 +180,7 @@ export default function ResumePage() {
       order: sectionEntries.length,
     };
     const res = await fetch('/api/experience', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newEntry) });
-    if (res.ok) { const saved = await res.json(); setEntries(prev => [...prev, saved]); }
+    if (res.ok) { const saved = await res.json(); setEntries(prev => [...prev, saved]); setNewEntryId(saved.id); }
   };
 
   const switchTo = useCallback((i: number) => setActiveIdx(i), []);
@@ -246,8 +247,9 @@ export default function ResumePage() {
                         <p className="text-[13px] text-[#999] py-8">Loading...</p>
                       ) : sectionEntries.map((entry, ei) => (
                         <EntryCard key={entry.id} entry={entry} idx={ei}
-                          onUpdate={handleUpdate}
-                          onDelete={() => handleDelete(entry.id)}
+                          startInEdit={entry.id === newEntryId}
+                          onUpdate={async (e) => { await handleUpdate(e); if (entry.id === newEntryId) setNewEntryId(null); }}
+                          onDelete={async () => { await handleDelete(entry.id); if (entry.id === newEntryId) setNewEntryId(null); }}
                         />
                       ))}
                       <button onClick={handleAdd}
