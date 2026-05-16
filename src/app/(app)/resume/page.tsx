@@ -164,13 +164,17 @@ export default function ResumePage() {
   const sectionEntries = !isOverall ? entries.filter(e => e.sectionId === section.id) : [];
 
   const handleUpdate = async (updated: Entry) => {
-    const res = await fetch(`/api/experience/${updated.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updated) });
-    if (res.ok) { const saved = await res.json(); setEntries(prev => prev.map(e => e.id === saved.id ? saved : e)); }
+    setEntries(prev => prev.map(e => e.id === updated.id ? updated : e));
+    if (!updated.id.startsWith('temp-')) {
+      try { await fetch(`/api/experience/${updated.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updated) }); } catch { /* local only */ }
+    }
   };
 
   const handleDelete = async (id: string) => {
-    const res = await fetch(`/api/experience/${id}`, { method: 'DELETE' });
-    if (res.ok) setEntries(prev => prev.filter(e => e.id !== id));
+    setEntries(prev => prev.filter(e => e.id !== id));
+    if (!id.startsWith('temp-')) {
+      try { await fetch(`/api/experience/${id}`, { method: 'DELETE' }); } catch { /* local only */ }
+    }
   };
 
   const handleAdd = async () => {
