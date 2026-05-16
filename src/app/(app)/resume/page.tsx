@@ -136,6 +136,14 @@ function EntryCard({ entry, idx, onUpdate, onDelete }: { entry: Entry; idx: numb
   );
 }
 
+const STATIC_SECTIONS: Section[] = [
+  { id: 'education', num: '01', label: 'EDUCATION' },
+  { id: 'projects', num: '02', label: 'PROJECTS' },
+  { id: 'intern', num: '03', label: 'INTERNSHIP' },
+  { id: 'growth', num: '04', label: 'GROWTH' },
+  { id: 'org', num: '05', label: 'ORGANIZATION' },
+];
+
 // ─── Main ───
 export default function ResumePage() {
   const [activeIdx, setActiveIdx] = useState(0);
@@ -149,12 +157,7 @@ export default function ResumePage() {
     }).catch(() => setLoading(false));
   }, []);
 
-  const sections: Section[] = entries.reduce<Section[]>((acc, e) => {
-    if (!acc.find(s => s.id === e.sectionId)) acc.push({ id: e.sectionId, num: e.sectionNum, label: e.sectionLabel });
-    return acc;
-  }, []);
-
-  const allSections: (Section & { isOverall?: boolean })[] = [{ id: 'overall', num: '00', label: 'OVERALL', isOverall: true }, ...sections];
+  const allSections: (Section & { isOverall?: boolean })[] = [{ id: 'overall', num: '00', label: 'OVERALL', isOverall: true }, ...STATIC_SECTIONS];
   const section = allSections[activeIdx];
   const isOverall = activeIdx === 0;
   const sectionEntries = !isOverall ? entries.filter(e => e.sectionId === section.id) : [];
