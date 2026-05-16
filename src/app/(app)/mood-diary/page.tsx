@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, Plus, Pencil, Check, X, Trash2 } from 'lucide-react';
+import { ArrowUpRight, Plus, Pencil, Check, X, Trash2, ImagePlus } from 'lucide-react';
 
 const C = {
   accent: '#002FA7',
@@ -10,7 +10,6 @@ const C = {
 };
 
 const CATEGORIES = ['ALL', '产品设计', '视觉设计', '文档'];
-const COLORS = ['#002FA7', '#1a1a2e', '#16213e', '#0f3460', '#533483', '#e94560', '#2d6a4f', '#d4a373'];
 
 interface Project {
   id: string;
@@ -21,8 +20,30 @@ interface Project {
   description: string;
   tools: string;
   color: string;
+  imageData: string | null;
   href: string;
   order: number;
+}
+
+function compressImage(file: File, maxW = 1200, quality = 0.8): Promise<string> {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let w = img.width, h = img.height;
+        if (w > maxW) { h = (h * maxW) / w; w = maxW; }
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d')!;
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 // ─── Project Card ───
@@ -33,11 +54,19 @@ function ProjectCard({ project, idx, startInEdit, onUpdate, onDelete }: {
   const [hovered, setHovered] = useState(false);
   const [editing, setEditing] = useState(!!startInEdit);
   const [draft, setDraft] = useState<Project>(project);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const startEdit = () => { setDraft({ ...project }); setEditing(true); };
   const save = async () => { await onUpdate(draft); setEditing(false); };
   const cancel = () => { setDraft({ ...project }); setEditing(false); };
   const tools = project.tools.split(',').map(t => t.trim()).filter(Boolean);
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const data = await compressImage(file);
+    setDraft({ ...draft, imageData: data });
+  };
 
   if (editing) {
     return (
@@ -51,6 +80,22 @@ function ProjectCard({ project, idx, startInEdit, onUpdate, onDelete }: {
               <button onClick={async () => { await onDelete(); setEditing(false); }} className="w-7 h-7 flex items-center justify-center rounded-md text-[#E5E7EB] hover:text-red-400 hover:bg-red-50 transition-colors cursor-pointer"><Trash2 size={14} /></button>
             </div>
           </div>
+
+          {/* Image upload */}
+          <input ref={fileRef} type="file" accept="image/*" onChange={handleFile} className="hidden" />
+          <div onClick={() => fileRef.current?.click()}
+            className="relative aspect-[4/3] rounded-md overflow-hidden cursor-pointer border border-dashed border-[#E5E7EB] hover:border-[#002FA7] transition-colors"
+            style={draft.imageData ? {} : { backgroundColor: draft.color }}>
+            {draft.imageData ? (
+              <img src={draft.imageData} alt="preview" className="w-full h-full object-cover" />
+            ) : (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-white/60">
+                <ImagePlus size={28} />
+                <span className="text-[11px] font-mono">点击上传图片</span>
+              </div>
+            )}
+          </div>
+
           <div className="grid grid-cols-2 gap-3">
             <input value={draft.title} onChange={e => setDraft({ ...draft, title: e.target.value })} placeholder="标题 *"
               className="col-span-2 text-[15px] bg-white rounded px-3 py-2 outline-none focus:ring-1 focus:ring-[#002FA7]/30 border border-[#F0F0F0]" />
@@ -68,14 +113,6 @@ function ProjectCard({ project, idx, startInEdit, onUpdate, onDelete }: {
               className="col-span-2 text-[12px] bg-white rounded px-3 py-2 outline-none focus:ring-1 focus:ring-[#002FA7]/30 border border-[#F0F0F0] text-[#666]" />
             <textarea value={draft.description} onChange={e => setDraft({ ...draft, description: e.target.value })} rows={3} placeholder="描述"
               className="col-span-2 text-[12px] bg-white rounded px-3 py-2 outline-none focus:ring-1 focus:ring-[#002FA7]/30 border border-[#F0F0F0] text-[#666] leading-[1.8] resize-none" />
-            <div className="col-span-2 flex items-center gap-2">
-              <span className="text-[11px] text-[#999] shrink-0">颜色</span>
-              {COLORS.map(c => (
-                <button key={c} onClick={() => setDraft({ ...draft, color: c })}
-                  className={`w-6 h-6 rounded-full border-2 transition-all cursor-pointer ${draft.color === c ? 'border-[#002FA7] scale-110' : 'border-transparent'}`}
-                  style={{ backgroundColor: c }} />
-              ))}
-            </div>
           </div>
         </div>
       </motion.div>
@@ -87,11 +124,20 @@ function ProjectCard({ project, idx, startInEdit, onUpdate, onDelete }: {
       transition={{ duration: 0.4, delay: idx * 0.06, ease: [0.25, 0.1, 0.25, 1] }} className="group/card">
       <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
         className="relative overflow-hidden rounded-lg bg-[#FAFAFA] border border-[#F0F0F0] hover:border-[#E5E7EB] transition-all duration-300">
-        <div className="relative aspect-[4/3] overflow-hidden" style={{ backgroundColor: project.color }}>
-          <motion.div animate={hovered ? { scale: 1.05 } : { scale: 1 }} transition={{ duration: 0.4 }}
-            className="absolute inset-0 flex items-center justify-center">
-            <span className="text-white/20 text-[80px] font-mono font-extralight select-none">{String(idx + 1).padStart(2, '0')}</span>
-          </motion.div>
+
+        {/* Thumbnail */}
+        <div className="relative aspect-[4/3] overflow-hidden" style={!project.imageData ? { backgroundColor: project.color } : undefined}>
+          {project.imageData ? (
+            <motion.img animate={hovered ? { scale: 1.05 } : { scale: 1 }} transition={{ duration: 0.4 }}
+              src={project.imageData} alt={project.title} className="w-full h-full object-cover" />
+          ) : (
+            <motion.div animate={hovered ? { scale: 1.05 } : { scale: 1 }} transition={{ duration: 0.4 }}
+              className="absolute inset-0 flex items-center justify-center">
+              <span className="text-white/20 text-[80px] font-mono font-extralight select-none">{String(idx + 1).padStart(2, '0')}</span>
+            </motion.div>
+          )}
+
+          {/* Hover overlay */}
           <motion.div initial={{ opacity: 0 }} animate={hovered ? { opacity: 1 } : { opacity: 0 }} transition={{ duration: 0.2 }}
             className="absolute inset-0 bg-black/40 flex items-center justify-center gap-3">
             {project.href && (
@@ -103,10 +149,13 @@ function ProjectCard({ project, idx, startInEdit, onUpdate, onDelete }: {
               <Pencil size={12} /> 编辑
             </button>
           </motion.div>
+
           <div className="absolute top-4 left-4">
             <span className="text-[9px] font-mono px-2.5 py-1 rounded-full tracking-wider bg-white/90 text-[#666] backdrop-blur-sm">{project.category}</span>
           </div>
         </div>
+
+        {/* Info */}
         <div className="p-5">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
@@ -161,7 +210,7 @@ export default function PortfolioPage() {
     const tempId = `temp-${Date.now()}`;
     const newProject: Project = {
       id: tempId, title: '', subtitle: '', category: '产品设计', year: '',
-      description: '', tools: '', color: '#002FA7', href: '',
+      description: '', tools: '', color: '#002FA7', imageData: null, href: '',
       order: projects.length,
     };
     setProjects(prev => [...prev, newProject]);

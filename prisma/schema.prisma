@@ -107,6 +107,7 @@ model PortfolioProject {
   description String   @default("")
   tools       String   @default("")
   color       String   @default("#002FA7")
+  imageData   String?
   href        String?
   order       Int      @default(0)
   createdAt   DateTime @default(now())
