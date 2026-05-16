@@ -97,3 +97,21 @@ model ExperienceEntry {
   @@index([sectionId])
   @@index([order])
 }
+
+model PortfolioProject {
+  id          String   @id @default(cuid())
+  title       String   @default("")
+  subtitle    String   @default("")
+  category    String   @default("产品设计")
+  year        String   @default("")
+  description String   @default("")
+  tools       String   @default("")
+  color       String   @default("#002FA7")
+  href        String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([order])
+}
