@@ -174,13 +174,27 @@ export default function ResumePage() {
   };
 
   const handleAdd = async () => {
+    const tempId = `temp-${Date.now()}`;
     const newEntry = {
+      id: tempId,
       sectionId: section.id, sectionNum: section.num, sectionLabel: section.label,
       date: '', title: '', subtitle: '', tags: '', detail: '',
+      pending: false, placeholder: false,
       order: sectionEntries.length,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
-    const res = await fetch('/api/experience', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newEntry) });
-    if (res.ok) { const saved = await res.json(); setEntries(prev => [...prev, saved]); setNewEntryId(saved.id); }
+    setEntries(prev => [...prev, newEntry]);
+    setNewEntryId(tempId);
+
+    try {
+      const res = await fetch('/api/experience', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newEntry) });
+      if (res.ok) {
+        const saved = await res.json();
+        setEntries(prev => prev.map(e => e.id === tempId ? saved : e));
+        setNewEntryId(saved.id);
+      }
+    } catch { /* keep local entry if API fails */ }
   };
 
   const switchTo = useCallback((i: number) => setActiveIdx(i), []);
