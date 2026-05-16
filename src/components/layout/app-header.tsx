@@ -38,7 +38,7 @@ export function AppHeader() {
               className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-text-secondary hover:text-text-primary hover:bg-bg-secondary transition-colors"
             >
               <Palette size={16} />
-              <span>设计作品集</span>
+              <span>作品集</span>
             </Link>
           </nav>
         </div>

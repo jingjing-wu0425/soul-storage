@@ -30,14 +30,14 @@ interface Project {
 }
 
 // ─── Data ───
-const CATEGORIES = ['ALL', 'UI/UX', '品牌', '视觉', '交互'];
+const CATEGORIES = ['ALL', '产品设计', '视觉设计', '文档'];
 
 const PROJECTS: Project[] = [
   {
     id: 'soul-storage',
     title: 'The Soul Storage',
     subtitle: '个人网站 · 全栈开发',
-    category: 'UI/UX',
+    category: '产品设计',
     year: '2026',
     description: '基于生命切片理念的个人数字空间。Next.js + Prisma + Framer Motion，暗色主题与极简交互。',
     tools: ['Next.js', 'Tailwind', 'Prisma'],
@@ -48,7 +48,7 @@ const PROJECTS: Project[] = [
     id: 'course-plugin',
     title: '选课插件',
     subtitle: '求是潮 · 产品设计',
-    category: 'UI/UX',
+    category: '产品设计',
     year: '2026',
     description: '基于学生反馈迭代搜索体验，优化课程冲突检测与筛选流程，减少核心操作路径点击次数。',
     tools: ['Figma', '用户调研'],
@@ -58,7 +58,7 @@ const PROJECTS: Project[] = [
     id: 'schedule-app',
     title: '课程表 App',
     subtitle: '求是潮 · 移动端设计',
-    category: 'UI/UX',
+    category: '产品设计',
     year: '2026',
     description: '用户调研驱动 UI 简化，从信息架构层面重构课表展示，实现一键导入与智能提醒。',
     tools: ['Figma', 'React Native'],
@@ -68,7 +68,7 @@ const PROJECTS: Project[] = [
     id: 'advisor-flow',
     title: 'AdvisorFlow',
     subtitle: '导师发现系统 · 界面设计',
-    category: '交互',
+    category: '产品设计',
     year: '2026',
     description: '多源信息检索的可视化界面设计，递归搜索结果的多层级呈现，AI 加权推荐的交互反馈。',
     tools: ['Figma', '原型设计'],
@@ -79,7 +79,7 @@ const PROJECTS: Project[] = [
     id: 'poster-system',
     title: '情绪海报系统',
     subtitle: '可视化交互 · 组件设计',
-    category: '视觉',
+    category: '视觉设计',
     year: '2026',
     description: '可拖拽画布 + 多模态编辑的海报生成系统，支持手绘、贴纸、文字叠加与自由裁剪。',
     tools: ['Framer Motion', 'Canvas API'],
@@ -90,7 +90,7 @@ const PROJECTS: Project[] = [
     id: 'xiaohongshu',
     title: '小红书内容矩阵',
     subtitle: '自媒体运营 · 视觉体系',
-    category: '品牌',
+    category: '视觉设计',
     year: '2026',
     description: '20 天涨粉 300+，累计播放 5w+。建立统一视觉识别系统，A/B 测试封面策略。',
     tools: ['Canva', '数据驱动'],
@@ -219,10 +219,10 @@ export default function PortfolioPage() {
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             <h1 className="text-3xl md:text-4xl tracking-tight leading-none text-black" style={{ fontWeight: 500 }}>
-              设计作品集
+              作品集
             </h1>
             <p className="mt-3 text-[14px] leading-[1.8] tracking-wide text-[#666]">
-              产品设计 · 视觉传达 · 交互原型
+              产品设计 · 视觉设计 · 文档
             </p>
           </motion.div>
           <motion.div
