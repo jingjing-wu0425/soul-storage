@@ -204,24 +204,24 @@ export default function PortfolioPage() {
       <div className="mx-auto max-w-[1440px] px-[8vw]">
 
         {/* Header */}
-        <div className="pt-28 pb-12">
+        <div className="pt-6 pb-4">
           <motion.p
             initial={{ opacity: 0, x: -12 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1, duration: 0.5 }}
-            className="text-[11px] font-mono tracking-[0.5em] uppercase mb-6 text-[#E5E7EB]"
+            className="text-[10px] font-mono tracking-[0.4em] uppercase mb-2 text-[#E5E7EB]"
           >
             Portfolio
           </motion.p>
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            <h1 className="text-3xl md:text-4xl tracking-tight leading-none text-black" style={{ fontWeight: 500 }}>
+            <h1 className="text-2xl tracking-tight leading-none text-black" style={{ fontWeight: 500 }}>
               作品集
             </h1>
-            <p className="mt-3 text-[14px] leading-[1.8] tracking-wide text-[#666]">
+            <p className="mt-1.5 text-[13px] tracking-wide text-[#666]">
               产品设计 · 视觉设计 · 文档
             </p>
           </motion.div>
@@ -229,12 +229,12 @@ export default function PortfolioPage() {
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ delay: 0.5, duration: 0.6 }}
-            className="h-px bg-[#E5E7EB] mt-10 origin-left"
+            className="h-px bg-[#E5E7EB] mt-4 origin-left"
           />
         </div>
 
         {/* Filter tabs */}
-        <div className="flex items-center gap-1 mb-10">
+        <div className="flex items-center gap-1 mb-6">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
@@ -251,7 +251,7 @@ export default function PortfolioPage() {
         </div>
 
         {/* Project grid */}
-        <div className="pb-20">
+        <div className="pb-10">
           <AnimatePresence mode="popLayout">
             <motion.div
               layout
@@ -264,15 +264,15 @@ export default function PortfolioPage() {
           </AnimatePresence>
 
           {filtered.length === 0 && (
-            <div className="py-20 text-center">
+            <div className="py-12 text-center">
               <p className="text-[13px] text-[#999]">该分类下暂无作品</p>
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="pb-14">
-          <div className="h-px bg-[#F0F0F0] mb-6" />
+        <div className="pb-6">
+          <div className="h-px bg-[#F0F0F0] mb-4" />
           <div className="flex items-center justify-between text-[10px] font-mono tracking-wider text-[#E5E7EB]">
             <span>2026.05</span>
             <span>Jing Jing</span>

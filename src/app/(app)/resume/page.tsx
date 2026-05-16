@@ -283,17 +283,17 @@ export default function ResumePage() {
         <div className="mx-auto max-w-[960px] px-8 md:px-12">
 
           {/* Header */}
-          <div className="pt-28 pb-12">
+          <div className="pt-6 pb-4">
             <motion.p initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1, duration: 0.5 }}
-              className="text-[11px] font-mono tracking-[0.5em] uppercase mb-6 text-[#E5E7EB]">
+              className="text-[10px] font-mono tracking-[0.4em] uppercase mb-2 text-[#E5E7EB]">
               My Experience
             </motion.p>
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }}>
-              <h1 className="text-3xl md:text-4xl tracking-tight leading-none text-black" style={{ fontWeight: 500 }}>京京</h1>
-              <p className="mt-3 text-[14px] leading-[1.8] tracking-wide text-[#666]">
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }}>
+              <h1 className="text-2xl tracking-tight leading-none text-black" style={{ fontWeight: 500 }}>京京</h1>
+              <p className="mt-1.5 text-[13px] tracking-wide text-[#666]">
                 能驾驭 AI 的复合型架构师<span className="text-[#999]">（算法、产品、商业）</span>
               </p>
-              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-mono text-[#999]">
+              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-mono text-[#999]">
                 <span>jing@example.com</span>
                 <span className="text-[#E5E7EB]">·</span>
                 <span>Hangzhou, CN</span>
@@ -302,11 +302,11 @@ export default function ResumePage() {
               </div>
             </motion.div>
             <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.5, duration: 0.6 }}
-              className="h-px bg-[#E5E7EB] mt-10 origin-left" />
+              className="h-px bg-[#E5E7EB] mt-4 origin-left" />
           </div>
 
           {/* Sections - show one at a time */}
-          <div className="pb-20 min-h-[60vh]">
+          <div className="pb-10 min-h-[60vh]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={section.id}
@@ -316,9 +316,9 @@ export default function ResumePage() {
                 transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
               >
                 {/* Section header */}
-                <div className="grid grid-cols-[1fr_4fr] gap-x-8 mb-10">
+                <div className="grid grid-cols-[1fr_4fr] gap-x-8 mb-6">
                   <div className="flex flex-col items-end pt-1">
-                    <span className="text-[80px] md:text-[110px] font-mono font-extralight leading-none select-none text-[#F0F0F0] -mr-3">{section.num}</span>
+                    <span className="text-[60px] md:text-[80px] font-mono font-extralight leading-none select-none text-[#F0F0F0] -mr-3">{section.num}</span>
                     <span className="text-[10px] font-mono tracking-[0.4em] uppercase mt-4 text-[#E5E7EB]" style={{ writingMode: 'vertical-rl' }}>{section.label}</span>
                   </div>
                   <div className="pt-2">
@@ -338,7 +338,7 @@ export default function ResumePage() {
           </div>
 
           {/* Bottom prev/next */}
-          <div className="pb-14 flex items-center justify-between">
+          <div className="pb-6 flex items-center justify-between">
             <button
               onClick={() => activeIdx > 0 && switchTo(activeIdx - 1)}
               disabled={activeIdx === 0}
@@ -359,8 +359,8 @@ export default function ResumePage() {
           </div>
 
           {/* Footer */}
-          <Reveal className="pb-14">
-            <div className="h-px bg-[#F0F0F0] mb-6" />
+          <Reveal className="pb-6">
+            <div className="h-px bg-[#F0F0F0] mb-4" />
             <div className="flex items-center justify-between text-[10px] font-mono tracking-wider text-[#E5E7EB]">
               <span>2026.05</span>
               <span>Jing Jing</span>
