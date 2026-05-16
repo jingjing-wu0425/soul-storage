@@ -48,13 +48,17 @@ export async function verifyToken(token: string) {
 }
 
 export async function getCurrentUser() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(TOKEN_NAME)?.value;
-  if (!token) {
-    const { prisma } = await import("./db");
-    const user = await prisma.user.findFirst();
-    if (!user) return null;
-    return { sub: user.id, username: user.username };
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get(TOKEN_NAME)?.value;
+    if (!token) {
+      const { prisma } = await import("./db");
+      const user = await prisma.user.findFirst();
+      if (!user) return null;
+      return { sub: user.id, username: user.username };
+    }
+    return verifyToken(token);
+  } catch {
+    return null;
   }
-  return verifyToken(token);
 }
