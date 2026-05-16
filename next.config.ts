@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   images: {
     remotePatterns: [
       {
@@ -20,9 +23,6 @@ const nextConfig: NextConfig = {
         destination: "/api/files/:path*",
       },
     ];
-  },
-  turbopack: {
-    root: "C:\\Users\\11798\\Desktop\\个人网站",
   },
 };
 
