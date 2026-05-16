@@ -34,3 +34,5 @@ Thumbs.db
 
 # pnpm
 .pnpm-build-approval.json
+
+.vercel
