@@ -283,7 +283,7 @@ export default function ResumePage() {
         <div className="mx-auto max-w-[960px] px-8 md:px-12">
 
           {/* Header */}
-          <div className="pt-28 pb-16">
+          <div className="pt-28 pb-12">
             <motion.p initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1, duration: 0.5 }}
               className="text-[11px] font-mono tracking-[0.5em] uppercase mb-6 text-[#E5E7EB]">
               My Experience
