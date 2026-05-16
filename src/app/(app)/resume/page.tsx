@@ -37,6 +37,11 @@ interface Section {
   entries: Entry[];
 }
 
+const OVERALL_SECTION: Section = {
+  id: 'overall', num: '00', label: 'OVERALL',
+  entries: [],
+};
+
 const SECTIONS: Section[] = [
   {
     id: 'education', num: '01', label: 'EDUCATION',
@@ -247,13 +252,16 @@ function EntryCard({ entry, idx }: { entry: Entry; idx: number }) {
 
 // ─── Main ───
 
+const ALL_SECTIONS = [OVERALL_SECTION, ...SECTIONS];
+
 export default function ResumePage() {
   const [activeIdx, setActiveIdx] = useState(0);
   const switchTo = useCallback((i: number) => {
     setActiveIdx(i);
   }, []);
 
-  const section = SECTIONS[activeIdx];
+  const section = ALL_SECTIONS[activeIdx];
+  const isOverall = activeIdx === 0;
 
   return (
     <div className="min-h-screen bg-white">
@@ -262,7 +270,7 @@ export default function ResumePage() {
       <div className="fixed left-0 top-14 bottom-0 w-48 bg-white border-r border-[#F0F0F0] z-50 flex flex-col">
         <div className="flex-1" />
         <div className="px-6 pb-10 space-y-1">
-          {SECTIONS.map((s, i) => (
+          {ALL_SECTIONS.map((s, i) => (
             <button
               key={s.id}
               onClick={() => switchTo(i)}
@@ -282,30 +290,17 @@ export default function ResumePage() {
       <div className="ml-48">
         <div className="mx-auto max-w-[960px] px-8 md:px-12">
 
-          {/* Header */}
+          {/* Minimal header */}
           <div className="pt-6 pb-4">
             <motion.p initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1, duration: 0.5 }}
               className="text-[10px] font-mono tracking-[0.4em] uppercase mb-2 text-[#E5E7EB]">
               My Experience
             </motion.p>
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }}>
-              <h1 className="text-2xl tracking-tight leading-none text-black" style={{ fontWeight: 500 }}>京京</h1>
-              <p className="mt-1.5 text-[13px] tracking-wide text-[#666]">
-                能驾驭 AI 的复合型架构师<span className="text-[#999]">（算法、产品、商业）</span>
-              </p>
-              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-mono text-[#999]">
-                <span>jing@example.com</span>
-                <span className="text-[#E5E7EB]">·</span>
-                <span>Hangzhou, CN</span>
-                <span className="text-[#E5E7EB]">·</span>
-                <span className="italic">爵士乐循环中</span>
-              </div>
-            </motion.div>
-            <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.5, duration: 0.6 }}
-              className="h-px bg-[#E5E7EB] mt-4 origin-left" />
+            <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.3, duration: 0.6 }}
+              className="h-px bg-[#E5E7EB] origin-left" />
           </div>
 
-          {/* Sections - show one at a time */}
+          {/* Content area */}
           <div className="pb-10 min-h-[60vh]">
             <AnimatePresence mode="wait">
               <motion.div
@@ -315,24 +310,60 @@ export default function ResumePage() {
                 exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
               >
-                {/* Section header */}
-                <div className="grid grid-cols-[1fr_4fr] gap-x-8 mb-6">
-                  <div className="flex flex-col items-end pt-1">
-                    <span className="text-[60px] md:text-[80px] font-mono font-extralight leading-none select-none text-[#F0F0F0] -mr-3">{section.num}</span>
-                    <span className="text-[10px] font-mono tracking-[0.4em] uppercase mt-4 text-[#E5E7EB]" style={{ writingMode: 'vertical-rl' }}>{section.label}</span>
+                {isOverall ? (
+                  /* ── OVERALL: personal intro ── */
+                  <div className="pt-8">
+                    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
+                      <h1 className="text-3xl md:text-5xl tracking-tight leading-none text-black" style={{ fontWeight: 500 }}>京京</h1>
+                      <p className="mt-4 text-[15px] tracking-wide text-[#666] leading-[1.8]">
+                        能驾驭 AI 的复合型架构师<span className="text-[#999]">（算法、产品、商业）</span>
+                      </p>
+                    </motion.div>
+                    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }}
+                      className="mt-8 flex flex-wrap gap-6">
+                      <div>
+                        <span className="text-[9px] font-mono tracking-[0.3em] uppercase block text-[#999] mb-1.5">Email</span>
+                        <span className="text-[13px] text-black">jing@example.com</span>
+                      </div>
+                      <div>
+                        <span className="text-[9px] font-mono tracking-[0.3em] uppercase block text-[#999] mb-1.5">Location</span>
+                        <span className="text-[13px] text-black">Hangzhou, CN</span>
+                      </div>
+                      <div>
+                        <span className="text-[9px] font-mono tracking-[0.3em] uppercase block text-[#999] mb-1.5">Status</span>
+                        <span className="text-[13px] text-black italic">爵士乐循环中</span>
+                      </div>
+                    </motion.div>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4, duration: 0.5 }}
+                      className="mt-10 pt-8 border-t border-[#F0F0F0]">
+                      <p className="text-[13px] text-[#999] leading-[2] font-mono">
+                        浙江大学 · 工商管理 · 2025–2029
+                      </p>
+                      <p className="text-[13px] text-[#999] leading-[2] font-mono mt-1">
+                        产品设计 / AI Agent / 自媒体增长
+                      </p>
+                    </motion.div>
                   </div>
-                  <div className="pt-2">
-                    <span className="text-[10px] font-mono text-[#E5E7EB] tracking-[0.4em] uppercase">{section.label}</span>
-                    <div className="w-10 h-px bg-[#E5E7EB] mt-2" />
-                  </div>
-                </div>
-
-                {/* Entries */}
-                <div className="ml-[20%]">
-                  {section.entries.map((entry, ei) => (
-                    <EntryCard key={entry.id} entry={entry} idx={ei} />
-                  ))}
-                </div>
+                ) : (
+                  /* ── Section with entries ── */
+                  <>
+                    <div className="grid grid-cols-[1fr_4fr] gap-x-8 mb-6">
+                      <div className="flex flex-col items-end pt-1">
+                        <span className="text-[60px] md:text-[80px] font-mono font-extralight leading-none select-none text-[#F0F0F0] -mr-3">{section.num}</span>
+                        <span className="text-[10px] font-mono tracking-[0.4em] uppercase mt-4 text-[#E5E7EB]" style={{ writingMode: 'vertical-rl' }}>{section.label}</span>
+                      </div>
+                      <div className="pt-2">
+                        <span className="text-[10px] font-mono text-[#E5E7EB] tracking-[0.4em] uppercase">{section.label}</span>
+                        <div className="w-10 h-px bg-[#E5E7EB] mt-2" />
+                      </div>
+                    </div>
+                    <div className="ml-[20%]">
+                      {section.entries.map((entry, ei) => (
+                        <EntryCard key={entry.id} entry={entry} idx={ei} />
+                      ))}
+                    </div>
+                  </>
+                )}
               </motion.div>
             </AnimatePresence>
           </div>
@@ -344,17 +375,17 @@ export default function ResumePage() {
               disabled={activeIdx === 0}
               className="text-[10px] font-mono tracking-wider transition-colors cursor-pointer disabled:opacity-0 disabled:cursor-default text-[#E5E7EB] hover:text-[#002FA7]"
             >
-              ← {activeIdx > 0 ? SECTIONS[activeIdx - 1].label : ''}
+              ← {activeIdx > 0 ? ALL_SECTIONS[activeIdx - 1].label : ''}
             </button>
             <span className="text-[10px] font-mono text-[#E5E7EB] tracking-widest">
-              {String(activeIdx + 1).padStart(2, '0')} / {String(SECTIONS.length).padStart(2, '0')}
+              {String(activeIdx + 1).padStart(2, '0')} / {String(ALL_SECTIONS.length).padStart(2, '0')}
             </span>
             <button
-              onClick={() => activeIdx < SECTIONS.length - 1 && switchTo(activeIdx + 1)}
-              disabled={activeIdx === SECTIONS.length - 1}
+              onClick={() => activeIdx < ALL_SECTIONS.length - 1 && switchTo(activeIdx + 1)}
+              disabled={activeIdx === ALL_SECTIONS.length - 1}
               className="text-[10px] font-mono tracking-wider transition-colors cursor-pointer disabled:opacity-0 disabled:cursor-default text-[#E5E7EB] hover:text-[#002FA7]"
             >
-              {activeIdx < SECTIONS.length - 1 ? SECTIONS[activeIdx + 1].label : ''} →
+              {activeIdx < ALL_SECTIONS.length - 1 ? ALL_SECTIONS[activeIdx + 1].label : ''} →
             </button>
           </div>
 
